@@ -6,6 +6,7 @@ import { AlertasModule } from '../alertas/alertas.module.js';
 import { AuthModule } from '../auth/auth.module.js';
 import { UsersModule } from '../users/users.module.js';
 import { ReportesModule } from '../reportes/reportes.module.js';
+import { PrismaModule } from '../prisma/prisma.module.js';
 
 
 
@@ -19,6 +20,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       appSecret: process.env.OBSERVE_APP_SECRET ?? '',
       serviceId: 'siai-backend',
     }),
+    PrismaModule,
     AlertasModule,
     AuthModule,
     UsersModule,
