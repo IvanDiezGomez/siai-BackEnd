@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateTiposReporteDto } from './dto/create-tipos_reporte.dto.js';
 import { UpdateTiposReporteDto } from './dto/update-tipos_reporte.dto.js';
 
 @Injectable()
 export class TiposReportesService {
+  constructor(private readonly prisma: PrismaService) {}
+
   create(createTiposReporteDto: CreateTiposReporteDto) {
-    return 'This action adds a new tiposReporte';
+    return this.prisma.tipos_reportes.create({ data: createTiposReporteDto });
   }
 
   findAll() {
-    return `This action returns all tiposReportes`;
+    return this.prisma.tipos_reportes.findMany({
+      orderBy: { id_tipo_reporte: 'desc' },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tiposReporte`;
+  async findOne(id: number) {
+    const tipo = await this.prisma.tipos_reportes.findUnique({
+      where: { id_tipo_reporte: id },
+    });
+    if (!tipo) {
+      throw new NotFoundException(`Tipo de reporte #${id} no encontrado`);
+    }
+    return tipo;
   }
 
-  update(id: number, updateTiposReporteDto: UpdateTiposReporteDto) {
-    return `This action updates a #${id} tiposReporte`;
+  async update(id: number, updateTiposReporteDto: UpdateTiposReporteDto) {
+    await this.findOne(id);
+    return this.prisma.tipos_reportes.update({
+      where: { id_tipo_reporte: id },
+      data: updateTiposReporteDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tiposReporte`;
+  async remove(id: number) {
+    await this.findOne(id);
+    return this.prisma.tipos_reportes.delete({
+      where: { id_tipo_reporte: id },
+    });
   }
 }

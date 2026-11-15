@@ -1,26 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateAlertaDto } from './dto/create-alerta.dto.js';
 import { UpdateAlertaDto } from './dto/update-alerta.dto.js';
 
 @Injectable()
 export class AlertasService {
+  constructor(private readonly prisma: PrismaService) {}
+
   create(createAlertaDto: CreateAlertaDto) {
-    return 'This action adds a new alerta';
+    const { fecha_hora, ...data } = createAlertaDto;
+    return this.prisma.alertas.create({
+      data: {
+        ...data,
+        ...(fecha_hora ? { fecha_hora: new Date(fecha_hora) } : {}),
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all alertas`;
+    return this.prisma.alertas.findMany({
+      orderBy: { id_alerta: 'desc' },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} alerta`;
+  async findOne(id: number) {
+    const alerta = await this.prisma.alertas.findUnique({
+      where: { id_alerta: id },
+    });
+    if (!alerta) {
+      throw new NotFoundException(`Alerta #${id} no encontrada`);
+    }
+    return alerta;
   }
 
-  update(id: number, updateAlertaDto: UpdateAlertaDto) {
-    return `This action updates a #${id} alerta`;
+  async update(id: number, updateAlertaDto: UpdateAlertaDto) {
+    await this.findOne(id);
+    const { fecha_hora, ...data } = updateAlertaDto;
+    return this.prisma.alertas.update({
+      where: { id_alerta: id },
+      data: {
+        ...data,
+        ...(fecha_hora ? { fecha_hora: new Date(fecha_hora) } : {}),
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} alerta`;
+  async remove(id: number) {
+    await this.findOne(id);
+    return this.prisma.alertas.delete({
+      where: { id_alerta: id },
+    });
   }
 }
