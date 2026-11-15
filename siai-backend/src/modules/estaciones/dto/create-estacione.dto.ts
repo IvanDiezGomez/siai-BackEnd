@@ -1,36 +1,45 @@
+import { Type } from 'class-transformer';
 import {
-  IsString,
+  IsDateString,
+  IsIn,
+  IsLatitude,
+  IsLongitude,
   IsNotEmpty,
-  IsDate,
-  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
 } from 'class-validator';
 
 export class CreateEstacioneDto {
-  @IsString({ message: "el nombre es texto" })
-  @IsNotEmpty()
+  @IsString({ message: 'el nombre debe ser texto' })
+  @IsNotEmpty({ message: 'el nombre es obligatorio' })
+  @MaxLength(100)
   nombre: string;
 
-  @IsString({ message: "la observación es texto" })
-  @IsNotEmpty()
-  observacion: string;
-
-  @IsString({ message: "la ubicación es texto" })
-  @IsNotEmpty()
+  @IsString({ message: 'la ubicación debe ser texto' })
+  @IsNotEmpty({ message: 'la ubicación es obligatoria' })
+  @MaxLength(255)
   ubicacion: string;
 
-  @IsNumber()
-  @IsNotEmpty()
-  latitud: number;
+  @IsOptional()
+  @Type(() => Number)
+  @IsLatitude({ message: 'la latitud debe estar entre -90 y 90' })
+  latitud?: number;
 
-  @IsNumber()
-  @IsNotEmpty() 
-  longitud: number;
+  @IsOptional()
+  @Type(() => Number)
+  @IsLongitude({ message: 'la longitud debe estar entre -180 y 180' })
+  longitud?: number;
 
-  @IsString({ message: "el estado es texto" })
-  @IsNotEmpty()
-  estado: string;
+  @IsOptional()
+  @IsString({ message: 'el estado debe ser texto' })
+  @IsIn(['activa', 'inactiva', 'mantenimiento'], {
+    message: 'el estado debe ser activa, inactiva o mantenimiento',
+  })
+  @MaxLength(30)
+  estado?: string;
 
-  @IsDate({ message: "la fecha es una fecha válida" })
-  @IsNotEmpty()
-  fecha: Date;
+  @IsOptional()
+  @IsDateString({}, { message: 'la fecha_instalacion debe ser una fecha válida' })
+  fecha_instalacion?: string;
 }

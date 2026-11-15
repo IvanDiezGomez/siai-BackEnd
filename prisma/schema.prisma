@@ -5,3 +5,142 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model usuarios {
+  id_usuario Int     @id @default(autoincrement())
+  nombre     String  @db.VarChar(100)
+  apellido   String  @db.VarChar(100)
+  email      String  @unique @db.VarChar(150)
+  password   String  @db.VarChar(255)
+  rol        String  @default("usuario") @db.VarChar(50)
+  estado     Boolean @default(true)
+
+  historial_alertas historial_alertas[]
+  notificaciones    notificaciones[]
+  reportes          reportes[]
+}
+
+model estaciones {
+  id_estacion      Int       @id @default(autoincrement())
+  nombre           String    @db.VarChar(100)
+  ubicacion        String    @db.VarChar(255)
+  latitud          Decimal?  @db.Decimal(10, 7)
+  longitud         Decimal?  @db.Decimal(10, 7)
+  estado           String    @default("activa") @db.VarChar(30)
+  fecha_instalacion DateTime? @db.Date
+
+  alertas  alertas[]
+  sensores sensores[]
+}
+
+model zonas_riesgo {
+  id_zona     Int      @id @default(autoincrement())
+  nombre      String   @db.VarChar(100)
+  descripcion String?
+  nivel_riesgo String  @db.VarChar(30)
+  latitud     Decimal? @db.Decimal(10, 7)
+  longitud    Decimal? @db.Decimal(10, 7)
+
+  alertas alertas[]
+}
+
+model sensores {
+  id_sensor   Int     @id @default(autoincrement())
+  id_estacion Int
+  tipo        String  @db.VarChar(50)
+  modelo      String? @db.VarChar(100)
+  unidad      String? @db.VarChar(20)
+  estado      String  @default("activo") @db.VarChar(30)
+
+  estacion   estaciones   @relation(fields: [id_estacion], references: [id_estacion])
+  mediciones mediciones[]
+
+  @@index([id_estacion])
+}
+
+model mediciones {
+  id_medicion Int      @id @default(autoincrement())
+  id_sensor   Int
+  valor       Decimal  @db.Decimal(10, 2)
+  fecha_hora  DateTime @default(now()) @db.Timestamp(6)
+
+  sensor sensores @relation(fields: [id_sensor], references: [id_sensor])
+
+  @@index([id_sensor])
+}
+
+model alertas {
+  id_alerta   Int      @id @default(autoincrement())
+  id_estacion Int
+  id_zona     Int
+  nivel       String   @db.VarChar(30)
+  mensaje     String
+  fecha_hora  DateTime @default(now()) @db.Timestamp(6)
+  estado      String   @default("activa") @db.VarChar(30)
+
+  estacion          estaciones          @relation(fields: [id_estacion], references: [id_estacion])
+  zona              zonas_riesgo        @relation(fields: [id_zona], references: [id_zona])
+  historial_alertas historial_alertas[]
+  notificaciones    notificaciones[]
+
+  @@index([id_estacion])
+  @@index([id_zona])
+}
+
+model historial_alertas {
+  id_historial Int      @id @default(autoincrement())
+  id_alerta    Int
+  id_usuario   Int
+  accion       String   @db.VarChar(100)
+  fecha_hora   DateTime @default(now()) @db.Timestamp(6)
+  observacion  String?
+
+  alerta  alertas  @relation(fields: [id_alerta], references: [id_alerta])
+  usuario usuarios @relation(fields: [id_usuario], references: [id_usuario])
+
+  @@index([id_alerta])
+  @@index([id_usuario])
+}
+
+model notificaciones {
+  id_notificacion Int      @id @default(autoincrement())
+  id_usuario      Int
+  id_alerta       Int
+  mensaje         String
+  fecha_hora      DateTime @default(now()) @db.Timestamp(6)
+  leida           Boolean  @default(false)
+
+  usuario usuarios @relation(fields: [id_usuario], references: [id_usuario])
+  alerta  alertas  @relation(fields: [id_alerta], references: [id_alerta])
+
+  @@index([id_usuario])
+  @@index([id_alerta])
+}
+
+model tipos_reportes {
+  id_tipo_reporte Int      @id @default(autoincrement())
+  nombre          String   @unique @db.VarChar(100)
+  descripcion     String?
+  estado          Boolean? @default(true)
+
+  reportes reportes[]
+}
+
+model reportes {
+  id_reporte       Int       @id @default(autoincrement())
+  titulo           String    @db.VarChar(150)
+  descripcion      String?
+  id_tipo_reporte  Int
+  fecha_desde      DateTime? @db.Date
+  fecha_hasta      DateTime? @db.Date
+  fecha_generacion DateTime? @default(now()) @db.Timestamp(6)
+  formato          String?   @default("PDF") @db.VarChar(20)
+  estado           String?   @default("pendiente") @db.VarChar(20)
+  id_usuario       Int?
+
+  tipo_reporte tipos_reportes @relation(fields: [id_tipo_reporte], references: [id_tipo_reporte])
+  usuario      usuarios?      @relation(fields: [id_usuario], references: [id_usuario])
+
+  @@index([id_tipo_reporte])
+  @@index([id_usuario])
+}

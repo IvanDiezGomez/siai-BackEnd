@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { MedicionesService } from './mediciones.service.js';
 import { CreateMedicioneDto } from './dto/create-medicione.dto.js';
 import { UpdateMedicioneDto } from './dto/update-medicione.dto.js';
@@ -18,17 +18,17 @@ export class MedicionesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.medicionesService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.medicionesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMedicioneDto: UpdateMedicioneDto) {
-    return this.medicionesService.update(+id, updateMedicioneDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateMedicioneDto: UpdateMedicioneDto) {
+    return this.medicionesService.update(id, updateMedicioneDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.medicionesService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.medicionesService.remove(id);
   }
 }
