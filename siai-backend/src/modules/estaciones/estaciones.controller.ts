@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { EstacionesService } from './estaciones.service.js';
 import { CreateEstacioneDto } from './dto/create-estacione.dto.js';
 import { UpdateEstacioneDto } from './dto/update-estacione.dto.js';
@@ -18,17 +18,17 @@ export class EstacionesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.estacionesService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.estacionesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEstacioneDto: UpdateEstacioneDto) {
-    return this.estacionesService.update(+id, updateEstacioneDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateEstacioneDto: UpdateEstacioneDto) {
+    return this.estacionesService.update(id, updateEstacioneDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.estacionesService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.estacionesService.remove(id);
   }
 }

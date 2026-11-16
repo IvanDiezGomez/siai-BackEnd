@@ -1,25 +1,23 @@
+import { Type } from 'class-transformer';
 import {
-  IsString,
-  IsNotEmpty,
-  IsNumber,
   IsDateString,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsPositive,
 } from 'class-validator';
 
 export class CreateMedicioneDto {
+  @Type(() => Number)
+  @IsInt()
+  @IsPositive()
+  id_sensor: number;
+
+  @Type(() => Number)
   @IsNumber()
   valor: number;
 
-  @IsString()
-  @IsNotEmpty()
-  unidad: string;
-
-  @IsString()
-  @IsNotEmpty()
-  tipo: string;
-
+  @IsOptional()
   @IsDateString()
-  fecha: string;
-
-  @IsNumber()
-  estacionId: number;
+  fecha_hora?: string;
 }
