@@ -7,6 +7,9 @@ import { AuthModule } from '../auth/auth.module.js';
 import { UsersModule } from '../users/users.module.js';
 import { ReportesModule } from '../reportes/reportes.module.js';
 import { PrismaModule } from '../prisma/prisma.module.js';
+import { EstacionesModule } from '../estaciones/estaciones.module.js';
+import { HistorialAlertasModule } from '../historial-alertas/historial-alertas.module.js';
+ 
 
 
 
@@ -25,6 +28,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     AuthModule,
     UsersModule,
     ReportesModule,
+    EstacionesModule,
+    HistorialAlertasModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,26 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto.js';
-import { UpdateAuthDto } from './dto/update-auth.dto.js';
+import { Injectable, NotImplementedException } from '@nestjs/common';
+import { LoginAuthDto } from './dto/create-auth.dto.js';
+import { RegisterAuthDto } from './dto/update-auth.dto.js';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  register(registerAuthDto: RegisterAuthDto): never {
+    void registerAuthDto;
+    throw new NotImplementedException(
+      'Este es el método de registro, pero aan no se ha implementado la lógica de almacenamiento de usuarios en la base de datos.',
+    );
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  login(loginAuthDto: LoginAuthDto): never {
+    void loginAuthDto;
+    throw new NotImplementedException(
+      'Este es el método de inicio de sesión, pero aún no se ha implementado la lógica de autenticación y generación de tokens.',
+    );
   }
 }
+
