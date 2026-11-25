@@ -13,7 +13,17 @@ export class RegisterAuthDto {
   @MaxLength(80, { message: 'El nombre no puede superar los 80 caracteres.' })
   nombre: string;
 
-  @IsEmail({}, { message: 'El correo electrónico debe tener un formato válido.' })
+  @IsString({ message: 'El apellido debe ser un texto.' })
+  @IsNotEmpty({ message: 'El apellido es obligatorio.' })
+  @MinLength(2, { message: 'El apellido debe tener al menos 2 caracteres.' })
+  @MaxLength(80, { message: 'El apellido no puede superar los 80 caracteres.' })
+  apellido: string;
+
+  @IsEmail(
+    {},
+    { message: 'El correo electrónico debe tener un formato válido.' },
+  )
+  @IsNotEmpty({ message: 'El correo electrónico es obligatorio.' })
   email: string;
 
   @IsString({ message: 'La contraseña debe ser un texto.' })

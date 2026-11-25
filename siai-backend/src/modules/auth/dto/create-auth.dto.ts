@@ -7,7 +7,11 @@ import {
 } from 'class-validator';
 
 export class LoginAuthDto {
-  @IsEmail({}, { message: 'El correo electrónico debe tener un formato válido.' })
+  @IsEmail(
+    {},
+    { message: 'El correo electrónico debe tener un formato válido.' },
+  )
+  @IsNotEmpty({ message: 'El correo electrónico es obligatorio.' })
   email: string;
 
   @IsString({ message: 'La contraseña debe ser un texto.' })

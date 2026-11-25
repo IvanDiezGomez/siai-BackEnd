@@ -1,16 +1,22 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateTiposReporteDto {
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(100)
+  @IsString({ message: 'El nombre debe ser una cadena de texto' })
+  @IsNotEmpty({ message: 'El nombre es obligatorio' })
+  @MaxLength(100, { message: 'El nombre no puede superar los 100 caracteres' })
   nombre: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'La descripción debe ser una cadena de texto' })
   descripcion?: string;
 
   @IsOptional()
-  @IsBoolean()
+  @IsBoolean({ message: 'El estado debe ser verdadero o falso' })
   estado?: boolean;
 }

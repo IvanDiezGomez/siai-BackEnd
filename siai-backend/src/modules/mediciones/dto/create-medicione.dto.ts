@@ -9,15 +9,15 @@ import {
 
 export class CreateMedicioneDto {
   @Type(() => Number)
-  @IsInt()
-  @IsPositive()
+  @IsInt({ message: 'El ID del sensor debe ser un número entero' })
+  @IsPositive({ message: 'El ID del sensor debe ser un número positivo' })
   id_sensor: number;
 
   @Type(() => Number)
-  @IsNumber()
+  @IsNumber({}, { message: 'El valor debe ser un número' })
   valor: number;
 
   @IsOptional()
-  @IsDateString()
+  @IsDateString({}, { message: 'La fecha y hora debe tener formato ISO 8601' })
   fecha_hora?: string;
 }

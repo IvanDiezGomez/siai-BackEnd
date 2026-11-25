@@ -13,12 +13,14 @@ import {
 export class CreateEstacioneDto {
   @IsString({ message: 'el nombre debe ser texto' })
   @IsNotEmpty({ message: 'el nombre es obligatorio' })
-  @MaxLength(100)
+  @MaxLength(100, { message: 'el nombre no puede superar los 100 caracteres' })
   nombre: string;
 
   @IsString({ message: 'la ubicación debe ser texto' })
   @IsNotEmpty({ message: 'la ubicación es obligatoria' })
-  @MaxLength(255)
+  @MaxLength(255, {
+    message: 'la ubicación no puede superar los 255 caracteres',
+  })
   ubicacion: string;
 
   @IsOptional()
@@ -36,10 +38,13 @@ export class CreateEstacioneDto {
   @IsIn(['activa', 'inactiva', 'mantenimiento'], {
     message: 'el estado debe ser activa, inactiva o mantenimiento',
   })
-  @MaxLength(30)
+  @MaxLength(30, { message: 'el estado no puede superar los 30 caracteres' })
   estado?: string;
 
   @IsOptional()
-  @IsDateString({}, { message: 'la fecha_instalacion debe ser una fecha válida' })
+  @IsDateString(
+    {},
+    { message: 'la fecha_instalacion debe ser una fecha válida' },
+  )
   fecha_instalacion?: string;
 }

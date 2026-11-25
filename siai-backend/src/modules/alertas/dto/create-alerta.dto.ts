@@ -12,31 +12,33 @@ import {
 
 export class CreateAlertaDto {
   @Type(() => Number)
-  @IsInt()
-  @IsPositive()
+  @IsInt({ message: 'El ID de la estación debe ser un número entero' })
+  @IsPositive({ message: 'El ID de la estación debe ser un número positivo' })
   id_estacion: number;
 
   @Type(() => Number)
-  @IsInt()
-  @IsPositive()
+  @IsInt({ message: 'El ID de la zona debe ser un número entero' })
+  @IsPositive({ message: 'El ID de la zona debe ser un número positivo' })
   id_zona: number;
 
-  @IsString()
-  @IsNotEmpty()
-  @IsIn(['baja', 'media', 'alta', 'critica'])
-  @MaxLength(30)
+  @IsString({ message: 'El nivel debe ser una cadena de texto' })
+  @IsNotEmpty({ message: 'El nivel es obligatorio' })
+  @IsIn(['baja', 'media', 'alta', 'critica'], {
+    message: 'El nivel debe ser baja, media, alta o critica',
+  })
+  @MaxLength(30, { message: 'El nivel no puede superar los 30 caracteres' })
   nivel: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsOptional()
+  @IsNotEmpty({ message: 'El mensaje es obligatorio' })
   mensaje: string;
 
   @IsOptional()
-  @IsDateString()
+  @IsDateString({}, { message: 'La fecha y hora debe tener formato ISO 8601' })
   fecha_hora?: string;
 
   @IsOptional()
-  @IsString()
-  @MaxLength(30)
+  @IsString({ message: 'El estado debe ser una cadena de texto' })
+  @MaxLength(30, { message: 'El estado no puede superar los 30 caracteres' })
   estado?: string;
 }
